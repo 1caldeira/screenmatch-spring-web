@@ -104,6 +104,14 @@ public class Series {
         this.episodes = episodes;
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     @Override
     public String toString() {
         return "\nGenre: "+ genre +'\n'+
