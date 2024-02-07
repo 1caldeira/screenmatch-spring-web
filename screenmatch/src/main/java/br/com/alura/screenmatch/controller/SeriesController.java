@@ -1,26 +1,38 @@
 package br.com.alura.screenmatch.controller;
 
 import br.com.alura.screenmatch.dto.SeriesDTO;
-import br.com.alura.screenmatch.model.Series;
-import br.com.alura.screenmatch.repository.SeriesRepository;
+import br.com.alura.screenmatch.service.SeriesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 
 @RestController
+@RequestMapping("/series")
 public class SeriesController {
     @Autowired
-    private SeriesRepository repository;
-    @GetMapping("/series")
+    private SeriesService service;
+    @GetMapping()
     public List<SeriesDTO> getSeries(){
-        return repository.findAll()
-                .stream()
-                .map(s -> new SeriesDTO(s.getId(),s.getTitle(),s.getSeasons(),s.getRating(),s.getGenre(),s.getActors(),s.getSynopsis(),s.getPoster()))
-                .collect(Collectors.toList());
+        return service.getAllSeries();
     }
 
+    @GetMapping("/top5")
+    public List<SeriesDTO> getTop5Series(){
+        return service.getTop5Series();
+    }
+
+    @GetMapping("releases") public List<SeriesDTO> getReleases(){
+        return service.getReleases();
+    }
+
+    @GetMapping("/{id}")
+    public SeriesDTO getById(@PathVariable Long id){
+        return service.getById(id);
+    }
 }
