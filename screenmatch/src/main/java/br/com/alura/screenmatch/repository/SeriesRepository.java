@@ -24,12 +24,18 @@ public interface SeriesRepository extends JpaRepository<Series, Long> {
     @Query("SELECT e FROM Series s JOIN s.episodes e WHERE e.title ILIKE %:episodeName%")
     List<Episode> episodesByName(String episodeName);
 
-    @Query("SELECT e FROM Series s JOIN s.episodes e WHERE s = :series ORDER BY e.rating DESC LIMIT 5")
-    List<Episode> top5Episodes(Series series);
+    @Query("SELECT e FROM Series s JOIN s.episodes e WHERE s.id = :id ORDER BY e.rating DESC LIMIT 5")
+    List<Episode> top5Episodes(Long id);
     @Query("SELECT e FROM Series s JOIN s.episodes e WHERE s = :series AND e.rating != 0 ORDER BY e.rating ASC LIMIT 5")
     List<Episode> worst5Episodes(Series series);
     @Query("SELECT e FROM Series s JOIN s.episodes e WHERE s = :series AND YEAR (e.releaseDate) >= :yearReleased")
     List<Episode> episodesBySeriesAndYear(Series series, int yearReleased);
+    @Query("SELECT s FROM Series s " +
+            "JOIN s.episodes e " +
+            "GROUP BY s " +
+            "ORDER BY MAX(e.releaseDate) DESC LIMIT 5 ")
+    List<Series> recentReleases();
+    @Query("SELECT e FROM Series s JOIN s.episodes e WHERE s.id = :id AND e.season = :season")
+    List<Episode> getEpisodesBySeason(Long id, Integer season);
 
-    List<Series> findTop5ByOrderByEpisodesReleaseDateDesc();
 }
